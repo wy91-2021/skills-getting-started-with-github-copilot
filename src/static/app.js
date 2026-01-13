@@ -4,6 +4,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signup-form");
   const messageDiv = document.getElementById("message");
 
+  // 安全地转义文本以防 XSS
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   // Function to fetch activities from API
   async function fetchActivities() {
     try {
@@ -13,6 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // Clear loading message
       activitiesList.innerHTML = "";
 
+      // 清理下拉，保留默认选项
+      activitySelect.innerHTML = '<option value="">-- Select an activity --</option>';
+
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
@@ -20,11 +33,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // 构建参与者区域
+        const participantsHTML = details.participants && details.participants.length
+          ? `<ul class="participants-list">${details.participants.map(p => `<li>${escapeHtml(p)}</li>`).join("")}</ul>`
+          : `<p class="participants-empty">No participants yet</p>`;
+
         activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
+          <h4>${escapeHtml(name)}</h4>
+          <p>${escapeHtml(details.description)}</p>
+          <p><strong>Schedule:</strong> ${escapeHtml(details.schedule)}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants-section">
+            <h5>Participants</h5>
+            ${participantsHTML}
+          </div>
         `;
 
         activitiesList.appendChild(activityCard);
