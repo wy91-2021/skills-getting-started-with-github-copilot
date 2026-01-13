@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // 构建参与者区域（带删除按钮）
         const participantsHTML = details.participants && details.participants.length
-          ? `<ul class="participants-list">${details.participants.map(p => `<li><span class="participant-email">${escapeHtml(p)}</span><button class="participant-delete" data-email="${escapeHtml(p)}" data-activity="${escapeHtml(name)}" aria-label="Remove participant">×</button></li>`).join("")}</ul>`
+          ? `<ul class="participants-list">${details.participants.map(p => `<li><span class="participant-email">${escapeHtml(p)}</span><button class="participant-delete" data-email="${escapeHtml(p)}" data-activity="${escapeHtml(name)}" aria-label="Remove participant" title="Remove participant"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg></button></li>`).join("")}</ul>`
           : `<p class="participants-empty">No participants yet</p>`;
 
         activityCard.innerHTML = `
